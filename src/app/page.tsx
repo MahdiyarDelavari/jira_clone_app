@@ -2,9 +2,15 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div>
-      <Button variant={"destructive"} size={"sm"}>Shadcn Working</Button>
-      <p className="text-orange-700">Tailwind Working</p>
+    <div className="flex gap-4">
+      <Button variant={"primary"}>Primary</Button>
+      <Button variant={"secondary"}>Secondary</Button>
+      <Button variant={"destructive"}>Destructive</Button>
+      <Button variant={"ghost"}>Ghost</Button>
+      <Button variant={"muted"}>Muted</Button>
+      <Button variant={"outline"}>Outline</Button>
+      <Button variant={"teritary"}>Teritary</Button>
+      
     </div>
 
   );
