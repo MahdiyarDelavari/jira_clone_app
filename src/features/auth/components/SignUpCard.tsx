@@ -1,3 +1,5 @@
+"use client";
+
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
@@ -28,7 +30,7 @@ import { useRegister } from "../api/use-register";
 
 export const SignUpCard = () => {
 
-	const {mutate} = useRegister()
+	const {mutate,isPending} = useRegister()
 
 
 
@@ -116,8 +118,8 @@ export const SignUpCard = () => {
 						/>
 
 						
-						<Button disabled={false} size={"lg"} className="w-full">
-							Login
+						<Button disabled={isPending} size={"lg"} className="w-full">
+							Register
 						</Button>
 					</form>
 				</Form>
@@ -128,7 +130,7 @@ export const SignUpCard = () => {
 			<CardContent className="flex gap-4 p-7">
 				<Button
 					variant={"secondary"}
-					disabled={false}
+					disabled={isPending}
 					size={"lg"}
 					className="w-6/12"
 				>
@@ -137,7 +139,7 @@ export const SignUpCard = () => {
 				</Button>
 				<Button
 					variant={"secondary"}
-					disabled={false}
+					disabled={isPending}
 					size={"lg"}
 					className="w-6/12"
 				>
