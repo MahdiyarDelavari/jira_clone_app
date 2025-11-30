@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/components/query-provider";
 
 const inter = localFont({
@@ -26,7 +27,10 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${inter.variable} antialiased min-h-screen`}>
-				<QueryProvider>{children}</QueryProvider>
+				<QueryProvider>
+					<Toaster/>
+					{children}
+				</QueryProvider>
 			</body>
 		</html>
 	);
