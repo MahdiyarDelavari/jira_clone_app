@@ -21,12 +21,14 @@ import { useRef } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CreateWorkspaceFormProps {
 	onCancel?: () => void;
 }
 
 export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
+	const router = useRouter();
 	const { mutate, isPending } = useCreateWorkspace();
 
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -44,9 +46,9 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 			image: values.image instanceof File ? values.image : "",
 		};
         mutate({ form: finalValues }, {
-            onSuccess: () => {
-                form.reset();
-                // Redirect to new workspace
+            onSuccess: ({data}) => {
+				form.reset();
+                router.push(`/workspaces/${data.$id}`) // Redirect to new workspace
             }
         });
 	};
@@ -59,7 +61,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 	};
 
 	return (
-		<Card className="w-full h-full border-none shadow-none bg-neutral-100">
+		<Card className="w-full h-full border-none shadow-none">
 			<CardHeader className="flex p-7">
 				<CardTitle className="text-xl font-bold">
 					Create New Workspace
@@ -82,7 +84,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 										<FormLabel>Workspace Name</FormLabel>
 										<FormControl>
 											<Input
-												className="bg-white"
+												className=""
 												placeholder="My Workspace"
 												{...field}
 											/>
@@ -112,7 +114,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 												</div>
 											) : (
 												<Avatar className="size-[72px]">
-													<AvatarFallback className="bg-white">
+													<AvatarFallback className="">
 														<ImageIcon className="size-[36px] text-neutral-400 " />
 													</AvatarFallback>
 												</Avatar>
