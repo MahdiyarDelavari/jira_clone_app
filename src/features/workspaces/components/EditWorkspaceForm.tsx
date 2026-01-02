@@ -76,7 +76,12 @@ export const EditWorkspaceForm = ({
 	return (
 		<Card className="w-full h-full border-none shadow-none">
 			<CardHeader className="flex flex-row items-center gap-x-4 space-y-0 p-7">
-				<Button className="flex items-center justify-center" size="sm" variant="secondary" onClick={onCancel ? onCancel : () => router.back()}>
+				<Button
+					className="flex items-center justify-center"
+					size="sm"
+					variant="secondary"
+					onClick={onCancel ? onCancel : () => router.back()}
+				>
 					<ArrowLeft className="mr-2 size-4" />
 					Back
 				</Button>
@@ -152,31 +157,30 @@ export const EditWorkspaceForm = ({
 													placeholder="Choose an image file"
 												/>
 												{field.value ? (
-<Button
-													type="button"
-													size="xs"
-													variant="destructive"
+													<Button
+														type="button"
+														size="xs"
+														variant="destructive"
 														onClick={() => {
 															field.onChange(null);
 															if (inputRef.current) {
 																inputRef.current.value = "";
 															}
-													}}
-													className="w-fit mt-2"
-												>
-													Upload Image
-												</Button>
-												): (
-														
-												<Button
-													type="button"
-													size="xs"
-													variant="teritary"
-													onClick={() => inputRef.current?.click()}
-													className="w-fit mt-2"
-												>
-													Upload Image
-												</Button>
+														}}
+														className="w-fit mt-2"
+													>
+														Upload Image
+													</Button>
+												) : (
+													<Button
+														type="button"
+														size="xs"
+														variant="teritary"
+														onClick={() => inputRef.current?.click()}
+														className="w-fit mt-2"
+													>
+														Upload Image
+													</Button>
 												)}
 											</div>
 										</div>
