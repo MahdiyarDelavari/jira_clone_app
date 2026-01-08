@@ -19,13 +19,15 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, ImageIcon } from "lucide-react";
+import { ArrowLeft, CopyIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Workspace } from "../types";
 import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useDeleteWorkspace } from "../api/use-delete-workspace";
+import { toast } from "sonner";
+import { useResetInviteCode } from "../api/use-reset-invite-code";
 
 interface EditWorkspaceFormProps {
 	onCancel?: () => void;
@@ -38,14 +40,20 @@ export const EditWorkspaceForm = ({
 }: EditWorkspaceFormProps) => {
 	const router = useRouter();
 	const { mutate, isPending } = useUpdateWorkspace();
-	const {mutate: deleteWorkspace , isPending: isDeleting} = useDeleteWorkspace();
+	const { mutate: deleteWorkspace, isPending: isDeleting } =
+		useDeleteWorkspace();
+	const {mutate: resetInviteCode , isPending: isResettingInviteCode} = useResetInviteCode();
 
 	const [Delete, DeleteConfirmationDialog] = useConfirm(
 		"Delete Workspace",
 		"Are you sure you want to delete this workspace?",
 		"destructive"
 	);
-
+const [ResetDialog, ResetInviteCodeConfirmationDialog] = useConfirm(
+		"Reset Invite Code",
+		"Are you sure you want to reset the invite code for this workspace?",
+		"destructive"
+	);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
@@ -70,7 +78,21 @@ export const EditWorkspaceForm = ({
 				},
 			}
 		);
-	}
+	};
+	const handleResetInviteCode = async () => {
+		const ok = await ResetDialog();
+
+		if (!ok) return;
+		resetInviteCode(
+			{ param: { workspaceId: initialValues.$id } },
+			{
+				onSuccess: () => {
+					router.refresh();
+				},
+			}
+		);
+	};
+
 
 	const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
 		const finalValues = {
@@ -98,9 +120,12 @@ export const EditWorkspaceForm = ({
 		}
 	};
 
+	const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
+
 	return (
 		<div className="flex flex-col gap-y-4">
 			<DeleteConfirmationDialog />
+			<ResetInviteCodeConfirmationDialog />
 			<Card className="w-full h-full border-none shadow-none">
 				<CardHeader className="flex flex-row items-center gap-x-4 space-y-0 p-7">
 					<Button
@@ -244,10 +269,48 @@ export const EditWorkspaceForm = ({
 			<Card className="w-full h-full border-none shadow-none">
 				<CardContent className="p-7">
 					<div className="flex flex-col">
+						<h3 className="font-bold">Invite Members</h3>
+						<p className="text-sm text-muted-foreground">
+							Share this link to invite members to your workspace.
+						</p>
+						<div className="mt-4">
+							<div className="flex items-center gap-x-2">
+								<Input value={fullInviteLink} disabled />
+								<Button
+									variant="secondary"
+									className="size-12"
+									onClick={() => {
+										navigator.clipboard.writeText(fullInviteLink).then(() => {
+											toast.success("Invite link copied to clipboard");
+										});
+									}}
+								>
+									<CopyIcon className="size-5" />
+								</Button>
+							</div>
+						</div>
+						<DottedSeparator className="py-7" />
+						<Button
+							className="mt-6 w-fit ml-auto"
+							size={"sm"}
+							variant={"destructive"}
+							disabled={isPending || isResettingInviteCode}
+							onClick={handleResetInviteCode}
+						>
+							Reset Invite Link
+						</Button>
+					</div>
+				</CardContent>
+			</Card>
+
+			<Card className="w-full h-full border-none shadow-none">
+				<CardContent className="p-7">
+					<div className="flex flex-col">
 						<h3 className="font-bold">Danger Zone</h3>
 						<p className="text-sm text-muted-foreground">
 							Deleting a workspace is irreversible. Please proceed with caution.
 						</p>
+						<DottedSeparator className="py-7" />
 						<Button
 							className="mt-6 w-fit ml-auto"
 							size={"sm"}

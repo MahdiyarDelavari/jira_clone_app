@@ -119,8 +119,7 @@ const app = new Hono()
 				uploadedImageUrl = `data:image/png;base64,${Buffer.from(
 					arrayBuffer
 				).toString("base64")}`;
-			}
-			else {
+			} else {
 				uploadedImageUrl = image;
 			}
 
@@ -134,32 +133,43 @@ const app = new Hono()
 				}
 			);
 			return c.json({ data: workspace });
-
-
 		}
-	).delete(
-		"/:workspaceId",
-		sessionMiddleware,
-		async (c) => {
-			const databases = c.get("databases");
-			const user = c.get("user");
-			const { workspaceId } = c.req.param();
+	)
+	.delete("/:workspaceId", sessionMiddleware, async (c) => {
+		const databases = c.get("databases");
+		const user = c.get("user");
+		const { workspaceId } = c.req.param();
 
-			const members = await getMember({
-				databases,
-				userId: user.$id,
-				workspaceId,
-			})
-			if (!members || members.role !== MemberRole.ADMIN) {
-				return c.json({ message: "Unauthorized" }, 401);
-			}
+		const members = await getMember({
+			databases,
+			userId: user.$id,
+			workspaceId,
+		});
+		if (!members || members.role !== MemberRole.ADMIN) {
+			return c.json({ message: "Unauthorized" }, 401);
+		}
 
-			await databases.deleteDocument(
-				DATABASE_ID,
-				WORKSPACES_ID,
-				workspaceId
-			);
-			return c.json({ data: {$id : workspaceId} });
-		})
+		await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
+		return c.json({ data: { $id: workspaceId } });
+	})
+	.post("/:workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
+		const databases = c.get("databases");
+		const user = c.get("user");
+		const { workspaceId } = c.req.param();
+
+		const members = await getMember({
+			databases,
+			userId: user.$id,
+			workspaceId,
+		});
+		if (!members || members.role !== MemberRole.ADMIN) {
+			return c.json({ message: "Unauthorized" }, 401);
+		}
+
+		const workspace = await databases.updateDocument(DATABASE_ID, WORKSPACES_ID, workspaceId, {
+			inviteCode: generateInviteCode(),
+		});
+		return c.json({ data: workspace });
+	});
 
 export default app;
