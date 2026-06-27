@@ -1,1 +1,1 @@
-export const AUTH_COOKIE = "mwa_mira_session"
+export const AUTH_COOKIE = "cwa-jira-clone-session";
