@@ -1,5 +1,6 @@
 {
   "name": "jira-clone",
+  "description": "A Jira-inspired project management app built with Next.js and Appwrite.",
   "version": "0.1.0",
   "private": true,
   "scripts": {
