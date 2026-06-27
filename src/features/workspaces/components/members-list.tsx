@@ -6,7 +6,7 @@ import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
 
 import { MemberRole } from "@/features/members/types";
 import { useGetMembers } from "@/features/members/api/use-get-members";
-import { MemberAvatar } from "@/features/members/components/MemberAvatar";
+import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { useDeleteMember } from "@/features/members/api/use-delete-member";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
@@ -14,7 +14,7 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Separator } from "@/components/ui/separator";
-import { DottedSeparator } from "@/components/DottedSeparator";
+import { DottedSeparator } from "@/components/dotted-separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ import {
 
 export const MembersList = () => {
   const workspaceId = useWorkspaceId();
-  const [confirm,ConfirmDialog] = useConfirm(
+  const [ConfirmDialog, confirm] = useConfirm(
     "Remove member",
     "This member will be removed from the workspace",
     "destructive"

@@ -1,13 +1,14 @@
-import { getCurrent } from '@/features/auth/queries';
-import { redirect } from 'next/navigation';
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const page = async () => {
-    const user = await getCurrent();
-    if (!user) redirect('/sign-in');
-  return (
-    <div>page</div>
-  )
-}
+import { getCurrent } from "@/features/auth/queries";
 
-export default page
+import { WorkspaceIdClient } from "./client";
+
+const WorkspaceIdPage = async () => {
+  const user = await getCurrent();
+  if (!user) redirect("/sign-in");
+
+  return <WorkspaceIdClient />
+};
+ 
+export default WorkspaceIdPage;

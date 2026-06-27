@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
 
 @layer utilities {
   .text-balance {
@@ -76,11 +77,11 @@
   }
 }
 
-
 .hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera*/
+
+.hide-scrollbar::--webkit-scrollbar {
+  display: none;
 }
